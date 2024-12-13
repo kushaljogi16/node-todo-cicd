@@ -1,40 +1,75 @@
 pipeline {
     agent any
-    
     stages {
-        
         stage("code"){
             steps{
                 git url: "https://github.com/kushaljogi16/node-todo-cicd.git", branch: "master"
-                echo 'bhaiyya code clone ho gaya'
+                echo "Clone the repo"
             }
         }
-        stage("build and test"){
+        stage("build image"){
             steps{
-                sh "docker build -t kushaljogi16/mydemoimage:latest ."
-                echo 'code build bhi ho gaya'
+                sh "docker build -t kushaljogi16/mysampleimage ."
+                echo "Docker image is build"
             }
         }
-        stage("scan image"){
-            steps{
-                echo 'image scanning ho gayi'
-            }
-        }
-        stage("push"){
+        stage("push image"){
             steps{
                 withCredentials([usernamePassword(credentialsId:"dockerhub",passwordVariable:"dockerhubPass",usernameVariable:"dockerhubUser")]){
                 sh "docker login -u ${env.dockerhubUser} -p ${env.dockerhubPass}"
-                sh "docker tag kushaljogi16/mydemoimage:latest kushaljogi16/mydemoimage:latest"
-                sh "docker push kushaljogi16/mydemoimage:latest"
-                echo 'image push ho gaya'
+                sh "docker tag kushaljogi16/mysampleimage:latest kushaljogi16/mysampleimage:latest"
+                sh "docker push kushaljogi16/mysampleimage:latest"
+                echo 'pushed docker image to dockerhub' 
                 }
+            }          
             }
-        }
         stage("deploy"){
             steps{
                 sh "docker-compose down && docker-compose up -d"
-                echo 'deployment ho gayi'
+                echo 'Deployed container using image'  
             }
         }
-    }
 }
+
+
+
+// pipeline {
+//     agent any
+    
+//     stages {
+        
+//         stage("code"){
+//             steps{
+//                 git url: "https://github.com/kushaljogi16/node-todo-cicd.git", branch: "master"
+//                 echo 'bhaiyya code clone ho gaya'
+//             }
+//         }
+//         stage("build and test"){
+//             steps{
+//                 sh "docker build -t kushaljogi16/mydemoimage:latest ."
+//                 echo 'code build bhi ho gaya'
+//             }
+//         }
+//         stage("scan image"){
+//             steps{
+//                 echo 'image scanning ho gayi'
+//             }
+//         }
+//         stage("push"){
+//             steps{
+//                 withCredentials([usernamePassword(credentialsId:"dockerhub",passwordVariable:"dockerhubPass",usernameVariable:"dockerhubUser")]){
+//                 sh "docker login -u ${env.dockerhubUser} -p ${env.dockerhubPass}"
+//                 sh "docker tag kushaljogi16/mydemoimage:latest kushaljogi16/mydemoimage:latest"
+//                 sh "docker push kushaljogi16/mydemoimage:latest"
+//                 echo 'image push ho gaya'
+//                 }
+//             }
+//         }
+//         stage("deploy"){
+//             steps{
+//                 sh "docker-compose down && docker-compose up -d"
+//                 echo 'deployment ho gayi'
+//             }
+//         }
+//     }
+// }
