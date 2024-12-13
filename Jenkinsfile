@@ -9,7 +9,7 @@ pipeline {
         }
         stage("build image"){
             steps{
-                sh "docker build -t kushaljogi16/mysampleimage ."
+                sh "docker build -t kushaljogi16/mysampletestimage ."
                 echo "Docker image is build"
             }
         }
@@ -17,8 +17,8 @@ pipeline {
             steps{
                 withCredentials([usernamePassword(credentialsId:"dockerhub",passwordVariable:"dockerhubPass",usernameVariable:"dockerhubUser")]){
                 sh "docker login -u ${env.dockerhubUser} -p ${env.dockerhubPass}"
-                sh "docker tag kushaljogi16/mysampleimage:latest kushaljogi16/mysampleimage:latest"
-                sh "docker push kushaljogi16/mysampleimage:latest"
+                sh "docker tag kushaljogi16/mysampletestimage:latest kushaljogi16/mysampletestimage:latest"
+                sh "docker push kushaljogi16/mysampletestimage:latest"
                 echo 'pushed docker image to dockerhub' 
                 }
             }          
