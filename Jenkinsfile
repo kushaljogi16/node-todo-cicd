@@ -29,8 +29,8 @@ pipeline {
                 echo 'Deployed container using image'  
             }
         }
+    }
 }
-
 
 
 // pipeline {
@@ -73,3 +73,4 @@ pipeline {
 //         }
 //     }
 // }
+    
